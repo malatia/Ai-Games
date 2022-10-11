@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.4/dist/tf.min.js"></script>
+<script src="{{url_for('static', filename='asteroids/ship.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/asteroid.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/laser.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/Ga.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/brain.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/Game.js')}}"></script>
+<script src="{{url_for('static', filename='asteroids/sketch.js')}}"></script>
+
+<div id="generation"></div>
+<input type="file" id="upload-json" />
+<input type="file" id="upload-weights" />
+<button id="loadModel">Load model</button>
+<style>
+  body {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+{% endblock %}

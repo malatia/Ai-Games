@@ -1,0 +1,41 @@
+{
+    "game_name": "samourai_fighters",
+    "generations": [
+        {
+            "highest_score": 0,
+            "lowest_score": 0,
+            "average_score": 0,
+            "generation_number": 1
+        },
+        {
+            "highest_score": 0,
+            "lowest_score": 0,
+            "average_score": 0,
+            "generation_number": 2
+        },
+        {
+            "highest_score": 133.5200000000013,
+            "lowest_score": 0,
+            "average_score": 33.38000000000032,
+            "generation_number": 3
+        },
+        {
+            "highest_score": 145.91000000000048,
+            "lowest_score": 0,
+            "average_score": 102.31500000000081,
+            "generation_number": 4
+        },
+        {
+            "highest_score": 169.60000000000133,
+            "lowest_score": 0,
+            "average_score": 114.22250000000075,
+            "generation_number": 5
+        },
+        {
+            "highest_score": 145.50000000000026,
+            "lowest_score": 0,
+            "average_score": 69.25000000000013,
+            "generation_number": 6
+        }
+    ]
+}

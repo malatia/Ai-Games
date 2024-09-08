@@ -1,10 +1,62 @@
 {% extends "base.html" %}
+
+{% block head %}
+<style>
+    html {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        background-image: url("{{url_for('static', filename='Fond_violet.png')}}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    input {
+        color: black;
+    }
+
+    form {
+        width: 40%;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    label,
+    input {
+        /* In order to define widths */
+        display: inline-block;
+    }
+
+    label {
+        width: 30%;
+        /* Positions the label text beside the input */
+        text-align: right;
+    }
+
+    label+input {
+        width: 30%;
+        /* Large margin-right to force the next element to the new-line
+           and margin-left to create a gutter between the label and input */
+        margin: 0 30% 0 4%;
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
-<form method="POST">
-    {# This hidden_tag is a CSRF security feature. #}
-    {{ form.hidden_tag() }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.password.label }} {{ form.password() }}
-    {{ form.submit() }}
-</form>
+<div class="d-flex w-100 h-100 align-items-center justify-content-center">
+    <form method="POST">
+        {# This hidden_tag is a CSRF security feature. #}
+        {{ form.hidden_tag() }}
+        {{ form.email.label }} {{ form.email() }}
+        <br>
+        {{ form.password.label }} {{ form.password() }}
+        <br>
+        {{ form.submit(style="position: absolute; bottom:-65%; right: 50%") }}
+    </form>
+</div>
 {% endblock %}

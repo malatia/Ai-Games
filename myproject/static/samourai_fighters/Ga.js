@@ -1,3 +1,16 @@
+async function download_models() {
+    let modelName
+    let date = new Date()
+    jour = date.getDate()
+    mois = date.getMonth() + 1
+    for (i = 1; i <= best_three.length; i++) {
+        modelName = "SF-" + jour + "-" + mois + "-" + "gen" + generation + "n" + i
+        await best_three[i - 1].brain.model.save('downloads://' + modelName);
+    }
+}
+
+
+
 async function nextGeneration() {
     console.log('next generation');
     calculateFitness()
@@ -7,6 +20,21 @@ async function nextGeneration() {
     console.log("best enemy " + savedEnemies[savedEnemies.length - 1].score)
     console.log("worst player " + savedPlayers[0].score)
     console.log("worst enemy " + savedEnemies[0].score)
+
+    bestScore = savedPlayers[savedPlayers.length - 1].score
+    lowestScore = savedPlayers[0].score
+    let sumScores = 0
+    for (let player of savedPlayers) {
+        sumScores += player.score;
+    }
+    let averageScore = sumScores / savedPlayers.length
+    scores.generations.push({
+        highest_score: bestScore, lowest_score: lowestScore,
+        average_score: averageScore, generation_number: generation
+    })
+
+    console.log("Scores added")
+
     let newEntities = Math.floor(TOTAL / 10)
     let bestFromLast = Math.floor(TOTAL / 10)
     let bestFromLastMutated = Math.floor(TOTAL / 10)
@@ -16,7 +44,7 @@ async function nextGeneration() {
 
     for (let i = 0; i < newEntities; i++) {
         let playerTemporary = createPlayer()
-        playerTemporary.brain.createBaseModel()
+        if (baseModel1 != undefined && baseModel2 != undefined) playerTemporary.brain.createBaseModel()
         players.push(playerTemporary);
         if (TRAININGMODE === "TWO") enemies.push(createEnemy());
     }
@@ -36,6 +64,8 @@ async function nextGeneration() {
         players.push(pickOnePlayer(mutationRate));
         if (TRAININGMODE === "TWO") enemies.push(pickOneEnemy(mutationRate));
     }
+
+    console.log("New generation added")
     // for (let i = 0; i < savedPlayers.length - 1; i++) {
     //     savedPlayers[i].dispose();
     //     savedEnemies[i].dispose();
@@ -48,21 +78,12 @@ async function nextGeneration() {
     // }
 
 
-    if (generation % 12 === 0) {
-        let modelName
-        let date = new Date()
-        jour = date.getDate()
-        mois = date.getMonth() + 1
-
-        for (i = 1; i < 4; i++) {
-            modelName = jour + "-" + mois + "-" + "gen" + generation + "n" + i
-            await savedPlayers[savedPlayers.length - i].brain.model.save('downloads://' + modelName);
-        }
-    }
     generation++
-
+    best_three = []
+    best_three = [savedPlayers[savedPlayers.length - 1], savedPlayers[savedPlayers.length - 2], savedPlayers[savedPlayers.length - 3]]
     savedPlayers = [];
     savedEnemies = [];
+    console.log("tableaux remis à zero")
 }
 
 function pickOnePlayer(mutation) {

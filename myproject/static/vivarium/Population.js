@@ -14,26 +14,31 @@ function Population(sizePop, list) {
     }
 
     this.nextGen = function () {
+        if (nextGenAsked === true) {
+            var limit = floor(this.vehicles.length / 2);
+            var tempVehicles = [];
+            var newVehicles = [];
+            for (var i = 0; i < limit; i++) {
+                tempVehicles[i] = this.selectParent();
+                //console.log(tempVehicles);
+            }
 
-        var limit = floor(this.vehicles.length / 2);
-        var tempVehicles = [];
-        var newVehicles = [];
-        for (var i = 0; i < limit; i++) {
-            tempVehicles[i] = this.selectParent();
-            //console.log(tempVehicles);
+            for (var i = 0; i < this.sizePop; i++) {
+                var x = random(width);
+                var y = random(height);
+                this.vehicles[i] = new Vehicle(x, y);
+            }
+
+            for (var i = 0; i < tempVehicles.length; i++) {
+                this.vehicles.push(tempVehicles[i]);
+            }
+            generation++;
+            calculateScores();
+            nextGenAsked = false;
+
         }
 
-        for (var i = 0; i < this.sizePop; i++) {
-            var x = random(width);
-            var y = random(height);
-            this.vehicles[i] = new Vehicle(x, y);
-        }
 
-        for (var i = 0; i < tempVehicles.length; i++) {
-            this.vehicles.push(tempVehicles[i]);
-        }
-
-        nextGenAsked = false;
 
     }
 

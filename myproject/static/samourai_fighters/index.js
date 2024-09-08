@@ -1,6 +1,6 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-const TOTAL = 100
+const TOTAL = 10
 let mutationRate = 0.1
 let generation = 1
 let mult = 0.3
@@ -16,6 +16,7 @@ const uploadJSONInput = document.getElementById('upload-json');
 const uploadWeightsInput = document.getElementById('upload-weights');
 const uploadJSONInput2 = document.getElementById('upload-json2');
 const uploadWeightsInput2 = document.getElementById('upload-weights2');
+let scores = { game_name: "samourai_fighters", generations: [] }
 
 loadModelButton = document.getElementById("loadModel")
 loadModelButton.addEventListener("click", loadModel)
@@ -25,7 +26,7 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 let timer = 60
 let timerId
-let gameSpeed = 1
+let gameSpeed = 30
 let fightCount = 0
 
 const background = new Sprite({
@@ -338,4 +339,21 @@ async function loadModel() {
   }
   fightCount = 0
   generation = 1
+}
+
+function saveStats() {
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "gen" + generation + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+  // $.ajax({
+  //   url: "/test",
+  //   type: "POST",
+  //   contentType: "application/json",
+  //   data: JSON.stringify(dataStr)
+  // });
+
 }

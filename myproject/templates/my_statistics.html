@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+  html {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    background-image: url("{{url_for('static', filename='Fond_violet.png')}}");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
+
+{% endblock %}
+
 <!-- Custom styles for this template -->
 <link href="{{ url_for('static', filename = 'list-groups.css')}} " rel="stylesheet">
 
@@ -8,125 +26,129 @@
   <canvas id="chart"></canvas>
 </div>
 
-<div class="list-group list-group-checkable d-grid gap-2 border-0 w-auto" id="game_selectionned">
-  {% for k,v in json_file.items() %}
-  <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios"
-    id="listGroupCheckableRadios{{k}}" value="{{k}}" checked>
-  <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios{{k}}">
-    Game ID {{ k }}
-    <span class="d-block small opacity-50">Game played : {{ v["game_name"]}} </span>
-  </label>
-  {% endfor%}
-</div>
+{% if json_file|length < 1 %} <p style="font-size: 30px; position:absolute; left:40%; bottom:50%"
+  class="justify-content-center align-items-center">Il n'y a pas encore de parties</p>
+  {% endif %}
 
-<script>
-  game_selectionned = document.getElementById("game_selectionned").addEventListener("click", drawGraph)
-  let json_file = '{{ json_file|tojson }}'
-  json_file = JSON.parse(json_file)
-  console.log(json_file[5])
-  gen5 = json_file[5]
-  let myChart = undefined
+  <div class="list-group list-group-checkable d-grid gap-2 border-0 w-auto" id="game_selectionned">
+    {% for k,v in json_file.items() %}
+    <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios"
+      id="listGroupCheckableRadios{{k}}" value="{{k}}" checked>
+    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios{{k}}">
+      Game ID {{ k }}
+      <span class="d-block small opacity-50" style="color:black">Game played : {{ v["game_name"]}} </span>
+    </label>
+    {% endfor%}
+  </div>
 
-  const ctx = document.getElementById('chart').getContext('2d');
+  <script>
+    game_selectionned = document.getElementById("game_selectionned").addEventListener("click", drawGraph)
+    let json_file = '{{ json_file|tojson }}'
+    json_file = JSON.parse(json_file)
+    console.log(json_file[5])
+    gen5 = json_file[5]
+    let myChart = undefined
 
-  function drawGraph() {
-    if (myChart != undefined) {
-      myChart.destroy()
-    }
-    game_id = document.querySelector('input[name="listGroupCheckableRadios"]:checked').value
-    console.log(json_file[game_id])
-    let gen_numbers = []
-    let mins = []
-    let averages = []
-    let maxs = []
-    for (i = 0; i < json_file[game_id].generations.length; i++) {
-      mins.push(json_file[game_id].generations[i].min)
-      averages.push(json_file[game_id].generations[i].average)
-      maxs.push(json_file[game_id].generations[i].max)
-      gen_numbers.push(json_file[game_id].generations[i].gen_number)
-    }
-    myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: gen_numbers,
-        datasets: [{
-          label: 'min_score',
-          data: mins,
+    const ctx = document.getElementById('chart').getContext('2d');
 
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
+    function drawGraph() {
+      if (myChart != undefined) {
+        myChart.destroy()
+      }
+      game_id = document.querySelector('input[name="listGroupCheckableRadios"]:checked').value
+      console.log(json_file[game_id])
+      let gen_numbers = []
+      let mins = []
+      let averages = []
+      let maxs = []
+      for (i = 0; i < json_file[game_id].generations.length; i++) {
+        mins.push(json_file[game_id].generations[i].min)
+        averages.push(json_file[game_id].generations[i].average)
+        maxs.push(json_file[game_id].generations[i].max)
+        gen_numbers.push(json_file[game_id].generations[i].gen_number)
+      }
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: gen_numbers,
+          datasets: [{
+            label: 'min_score',
+            data: mins,
+
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          },
+          {
+            label: 'max',
+            data: maxs,
+
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }, {
+            label: 'average',
+            data: averages,
+
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }
+
+          ]
         },
-        {
-          label: 'max',
-          data: maxs,
-
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }, {
-          label: 'average',
-          data: averages,
-
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }
-
-        ]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
           }
         }
-      }
-    });
+      });
 
 
-  }
-</script>
-{% endblock %}
+    }
+  </script>
+  {% endblock %}

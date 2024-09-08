@@ -1,9 +1,33 @@
+async function download_models() {
+    let modelName
+    let date = new Date()
+    jour = date.getDate()
+    mois = date.getMonth() + 1
+    for (i = 1; i <= best_three.length; i++) {
+        modelName = "AS-" + jour + "-" + mois + "-" + "gen" + generation + "n" + i
+        await best_three[i - 1].ship.brain.model.save('downloads://' + modelName);
+    }
+}
+
 function nextGeneration() {
     console.log('next generation');
     calculateFitness()
     savedGames.sort((a, b) => a.score - b.score);
     console.log("best player " + savedGames[savedGames.length - 1].score)
     console.log("worst player " + savedGames[0].score)
+
+    bestScore = savedGames[savedGames.length - 1].score
+    lowestScore = savedGames[0].score
+    let sumScores = 0
+    for (let player of savedGames) {
+        sumScores += player.score;
+    }
+    let averageScore = sumScores / savedGames.length
+    scores.generations.push({
+        highest_score: bestScore, lowest_score: lowestScore,
+        average_score: averageScore, generation_number: generation
+    })
+
     let newEntities = Math.floor(TOTAL / 10)
     let bestFromLast = Math.floor(TOTAL / 10)
     let bestFromLastMutated = Math.floor(TOTAL / 10)
@@ -26,12 +50,16 @@ function nextGeneration() {
     //     savedPlayers[i].dispose();
     //     savedEnemies[i].dispose();
     // }
+    best_three = []
+    best_three = [savedGames[savedGames.length - 1], savedGames[savedGames.length - 2], savedGames[savedGames.length - 3]]
     savedGames = []
     // for (let i = 0; i < TOTAL; i++) {
     //     players[i] = createPlayer()
     //     enemies[i] = createEnemy()
     //     fightCount = 0
     // }
+
+
     generation++
 }
 
